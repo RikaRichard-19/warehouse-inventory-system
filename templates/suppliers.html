@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Supplier Management</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Supplier Management</h1>
+
+    <nav>
+        <a href="/">Inventory</a> |
+        <a href="/suppliers">Suppliers</a> |
+        <a href="/procurement">Procurement</a> |
+        <a href="/stock-forecast">Stock Forecast</a> |
+        <a href="/analytics">Analytics</a>
+    </nav>
+
+    <hr>
+
+    <!-- SUPPLIER OVERVIEW -->
+
+    <h2>👥 Supplier Overview</h2>
+
+    <div class="dashboard">
+
+        <!-- TOTAL SUPPLIERS -->
+
+        <div class="card">
+
+            <h3>👥 Total Suppliers</h3>
+
+            <p>
+                {{ suppliers|length }}
+            </p>
+
+            <span>
+                Registered Suppliers
+            </span>
+
+        </div>
+
+
+        <!-- TOTAL ITEMS SUPPLIED -->
+
+        <div class="card">
+
+            <h3>📦 Items Supplied</h3>
+
+            <p>
+
+                {% set ns = namespace(total=0) %}
+
+{% for supplier in suppliers %}
+
+    {% set items = supplier["Items Supplied"].split(",") %}
+
+    {% set ns.total = ns.total + items|length %}
+
+{% endfor %}
+
+{{ ns.total }}
+
+                {{ total_supplied_items }}
+
+            </p>
+
+            <span>
+                Total Supplier-Item Relationships
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <hr>
+
+
+    <!-- ADD NEW SUPPLIER -->
+
+    <h2>➕ Add New Supplier</h2>
+
+    <form
+        method="POST"
+        action="/add_supplier"
+    >
+
+        <input
+            type="text"
+            name="supplier_id"
+            placeholder="Supplier ID"
+            required
+        >
+
+        <input
+            type="text"
+            name="supplier_name"
+            placeholder="Supplier Name"
+            required
+        >
+
+        <input
+            type="text"
+            name="contact"
+            placeholder="Contact Number"
+            required
+        >
+
+        <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            required
+        >
+
+        <input
+            type="text"
+            name="items_supplied"
+            placeholder="Items Supplied (e.g. Laptop, Keyboard, Mouse)"
+            required
+        >
+
+        <button type="submit">
+            ➕ Add Supplier
+        </button>
+
+    </form>
+
+
+    <hr>
+
+
+    <!-- SUPPLIER LIST -->
+
+    <h2>📋 Supplier List</h2>
+
+    <table>
+
+        <tr>
+
+            <th>Supplier ID</th>
+
+            <th>Supplier Name</th>
+
+            <th>Contact</th>
+
+            <th>Email</th>
+
+            <th>Items Supplied</th>
+
+            <th>Number of Items</th>
+
+        </tr>
+
+
+        {% for supplier in suppliers %}
+
+        <tr>
+
+            <!-- SUPPLIER ID -->
+
+            <td>
+
+                <strong>
+                    {{ supplier["Supplier ID"] }}
+                </strong>
+
+            </td>
+
+
+            <!-- SUPPLIER NAME -->
+
+            <td>
+                {{ supplier["Supplier Name"] }}
+            </td>
+
+
+            <!-- CONTACT -->
+
+            <td>
+                {{ supplier["Contact"] }}
+            </td>
+
+
+            <!-- EMAIL -->
+
+            <td>
+                {{ supplier["Email"] }}
+            </td>
+
+
+            <!-- ITEMS SUPPLIED -->
+
+            <td>
+
+                📦
+                {{ supplier["Items Supplied"] }}
+
+            </td>
+
+
+            <!-- NUMBER OF ITEMS -->
+
+            <td>
+
+                {% set items =
+                    supplier["Items Supplied"].split(",")
+                %}
+
+                {{ items|length }}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+
+    <hr>
+
+
+    <!-- SUPPLIER MANAGEMENT EXPLANATION -->
+
+    <h2>📌 Supplier Management</h2>
+
+    <p>
+
+        The Supplier Management module maintains supplier
+        information such as supplier ID, supplier name,
+        contact details, email and the items supplied.
+
+        A supplier can supply multiple items. The system
+        counts each item separately and displays the number
+        of items supplied by each supplier.
+
+        This information helps the warehouse identify
+        suitable suppliers during procurement.
+
+    </p>
+
+
+</body>
+
+</html>

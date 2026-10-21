@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Warehouse Inventory System</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Warehouse Inventory System</h1>
+
+    <nav>
+        <a href="/">Inventory</a> |
+        <a href="/suppliers">Suppliers</a> |
+        <a href="/procurement">Procurement</a> |
+        <a href="/stock-forecast">Stock Forecast</a> |
+        <a href="/analytics">Analytics</a>
+    </nav>
+
+    <hr>
+
+    <p>Scan Barcode or Enter Item ID</p>
+
+    <input
+        type="text"
+        id="barcode"
+        placeholder="Enter barcode"
+    >
+
+    <button onclick="searchItem()">Search</button>
+
+    <!-- ITEM DETAILS -->
+
+    <h2>Item Details</h2>
+
+    <div class="item-details">
+
+        <p>
+            <strong>Item:</strong>
+            <span id="itemName">-</span>
+        </p>
+
+        <p>
+            <strong>Quantity:</strong>
+            <span id="quantity">-</span>
+        </p>
+
+        <p>
+            <strong>Location:</strong>
+            <span id="location">-</span>
+        </p>
+
+    </div>
+
+    <hr>
+
+    <!-- STOCK STATUS CARDS -->
+
+    <h2>Stock Status</h2>
+
+    <div class="stock-cards">
+
+        <div class="stock-card current-stock">
+            <h3>📊 Current Stock</h3>
+            <p id="currentStock">0</p>
+            <span>Units Available</span>
+        </div>
+
+        <div class="stock-card added-stock">
+            <h3>📦 Stock Added</h3>
+            <p id="stockAdded">0</p>
+            <span>Units Added</span>
+        </div>
+
+        <div class="stock-card removed-stock">
+            <h3>📤 Stock Removed</h3>
+            <p id="stockRemoved">0</p>
+            <span>Units Removed</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- UPDATE STOCK -->
+
+    <h3>Update Stock</h3>
+
+    <input
+        type="number"
+        id="updateQuantity"
+        placeholder="Enter quantity"
+        min="1"
+    >
+
+    <button
+        class="add-button"
+        onclick="updateStock('ADD')">
+        ➕ Add Stock
+    </button>
+
+    <button
+        class="remove-button"
+        onclick="updateStock('REMOVE')">
+        ➖ Remove Stock
+    </button>
+
+    <!-- MESSAGE -->
+
+    <div id="message" class="message"></div>
+
+    <!-- JavaScript -->
+
+    <script src="/static/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Warehouse Analytics</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Warehouse Analytics Dashboard</h1>
+
+    <nav>
+        <a href="/">Inventory</a> |
+        <a href="/suppliers">Suppliers</a> |
+        <a href="/procurement">Procurement</a> |
+        <a href="/stock-forecast">Stock Forecast</a> |
+        <a href="/analytics">Analytics</a>
+    </nav>
+
+    <hr>
+
+    <!-- INVENTORY OVERVIEW -->
+
+    <h2>📦 Inventory Overview</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Stock</h3>
+            <p>{{ total_stock }}</p>
+            <span>Units Available</span>
+        </div>
+
+        <div class="card">
+            <h3>Total Items</h3>
+            <p>{{ total_items }}</p>
+            <span>Different Items</span>
+        </div>
+
+        <div class="card">
+            <h3>Low Stock Items</h3>
+            <p>{{ low_stock_items }}</p>
+            <span>Items Below 10 Units</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- STOCK MOVEMENT -->
+
+    <h2>📊 Stock Movement</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>📦 Stock Added</h3>
+            <p>{{ total_added }}</p>
+            <span>Total Units Added</span>
+        </div>
+
+        <div class="card">
+            <h3>📤 Stock Removed</h3>
+            <p>{{ total_removed }}</p>
+            <span>Total Units Used</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- PROCUREMENT -->
+
+    <h2>🚚 Procurement Overview</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Procurement Orders</h3>
+            <p>{{ total_procurement }}</p>
+            <span>Total Orders</span>
+        </div>
+
+        <div class="card">
+            <h3>Pending Orders</h3>
+            <p>{{ pending_procurement }}</p>
+            <span>Orders Pending</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- DEMAND ANALYSIS -->
+
+    <h2>📈 Item Demand Analysis</h2>
+
+    <p>
+        Items are arranged based on the amount of stock removed
+        from the warehouse. Higher stock removal indicates higher
+        recorded demand.
+    </p>
+
+    <table>
+
+        <tr>
+            <th>Item</th>
+            <th>Current Stock</th>
+            <th>Stock Removed</th>
+            <th>Demand Status</th>
+        </tr>
+
+        {% for item in demand_data %}
+
+        <tr>
+
+            <td>
+                <strong>{{ item.item }}</strong>
+            </td>
+
+            <td>
+                {{ item.current_stock }}
+            </td>
+
+            <td>
+                {{ item.stock_removed }}
+            </td>
+
+            <td>
+
+                {% if item.stock_removed > 5 %}
+
+                    <strong style="color:#e74c3c;">
+                        🔥 High Demand
+                    </strong>
+
+                {% elif item.stock_removed > 0 %}
+
+                    <strong style="color:#f39c12;">
+                        📊 Moderate Demand
+                    </strong>
+
+                {% else %}
+
+                    <strong style="color:#27ae60;">
+                        Low / No Recorded Demand
+                    </strong>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <!-- SUMMARY -->
+
+    <h2>📋 Analytics Summary</h2>
+
+    <p>
+        The Analytics module provides an overall view of warehouse
+        inventory, stock movements, procurement status and item demand.
+        This helps warehouse managers identify low-stock items,
+        monitor stock usage and understand which items have higher
+        recorded demand.
+    </p>
+
+</body>
+</html>

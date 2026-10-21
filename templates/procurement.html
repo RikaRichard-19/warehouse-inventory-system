@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Procurement Management</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Procurement Management</h1>
+
+    <nav>
+        <a href="/">Inventory</a> |
+        <a href="/suppliers">Suppliers</a> |
+        <a href="/procurement">Procurement</a> |
+        <a href="/stock-forecast">Stock Forecast</a> |
+        <a href="/analytics">Analytics</a>
+    </nav>
+
+    <hr>
+
+    <!-- PROCUREMENT OVERVIEW -->
+
+    <h2>🚚 Procurement Overview</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Total Orders</h3>
+            <p>{{ procurement|length }}</p>
+            <span>Procurement Orders</span>
+        </div>
+
+        <div class="card">
+            <h3>⏳ Pending</h3>
+
+            <p>
+                {{
+                    procurement
+                    |selectattr("Status", "equalto", "Pending")
+                    |list
+                    |length
+                }}
+            </p>
+
+            <span>Orders Pending</span>
+        </div>
+
+        <div class="card">
+            <h3>📦 Ordered</h3>
+
+            <p>
+                {{
+                    procurement
+                    |selectattr("Status", "equalto", "Ordered")
+                    |list
+                    |length
+                }}
+            </p>
+
+            <span>Orders Placed</span>
+        </div>
+
+        <div class="card">
+            <h3>✅ Received</h3>
+
+            <p>
+                {{
+                    procurement
+                    |selectattr("Status", "equalto", "Received")
+                    |list
+                    |length
+                }}
+            </p>
+
+            <span>Orders Received</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- ADD PROCUREMENT -->
+
+    <h2>➕ Add Procurement Order</h2>
+
+    <form method="POST" action="/add_procurement">
+
+        <input
+            type="text"
+            name="procurement_id"
+            placeholder="Procurement ID"
+            required
+        >
+
+        <input
+            type="text"
+            name="supplier_id"
+            placeholder="Supplier ID"
+            required
+        >
+
+        <input
+            type="text"
+            name="item"
+            placeholder="Item"
+            required
+        >
+
+        <input
+            type="number"
+            name="quantity"
+            placeholder="Quantity"
+            min="1"
+            required
+        >
+
+        <input
+            type="date"
+            name="order_date"
+            required
+        >
+
+        <select name="status" required>
+
+            <option value="Pending">
+                Pending
+            </option>
+
+            <option value="Ordered">
+                Ordered
+            </option>
+
+            <option value="Received">
+                Received
+            </option>
+
+        </select>
+
+        <button type="submit">
+            Add Procurement
+        </button>
+
+    </form>
+
+    <hr>
+
+    <!-- PROCUREMENT ORDERS -->
+
+    <h2>📋 Procurement Orders</h2>
+
+    <table>
+
+        <tr>
+            <th>Procurement ID</th>
+            <th>Supplier ID</th>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+            <th>Status</th>
+            <th>Update Status</th>
+        </tr>
+
+        {% for order in procurement %}
+
+        <tr>
+
+            <td>
+                <strong>
+                    {{ order["Procurement ID"] }}
+                </strong>
+            </td>
+
+            <td>
+                {{ order["Supplier ID"] }}
+            </td>
+
+            <td>
+                {{ order["Item"] }}
+            </td>
+
+            <td>
+                {{ order["Quantity"] }}
+            </td>
+
+            <td>
+                {{ order["Order Date"] }}
+            </td>
+
+            <td>
+
+                {% if order["Status"] == "Pending" %}
+
+                    <strong style="color:#f39c12;">
+                        ⏳ Pending
+                    </strong>
+
+                {% elif order["Status"] == "Ordered" %}
+
+                    <strong style="color:#3498db;">
+                        📦 Ordered
+                    </strong>
+
+                {% elif order["Status"] == "Received" %}
+
+                    <strong style="color:#27ae60;">
+                        ✅ Received
+                    </strong>
+
+                {% endif %}
+
+            </td>
+
+            <td>
+
+                <form
+                    method="POST"
+                    action="/update_procurement_status"
+                >
+
+                    <input
+                        type="hidden"
+                        name="procurement_id"
+                        value="{{ order['Procurement ID'] }}"
+                    >
+
+                    <select
+                        name="status"
+                        onchange="this.form.submit()"
+                    >
+
+                        <option
+                            value="Pending"
+                            {% if order["Status"] == "Pending" %}
+                            selected
+                            {% endif %}
+                        >
+                            Pending
+                        </option>
+
+                        <option
+                            value="Ordered"
+                            {% if order["Status"] == "Ordered" %}
+                            selected
+                            {% endif %}
+                        >
+                            Ordered
+                        </option>
+
+                        <option
+                            value="Received"
+                            {% if order["Status"] == "Received" %}
+                            selected
+                            {% endif %}
+                        >
+                            Received
+                        </option>
+
+                    </select>
+
+                </form>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <!-- EXPLANATION -->
+
+    <h2>📌 Procurement Process</h2>
+
+    <p>
+        Procurement helps the warehouse track items that need to
+        be purchased from suppliers. New procurement orders can be
+        added with supplier, item, quantity and order details.
+        The order status can then be updated from Pending to
+        Ordered and finally to Received.
+    </p>
+
+</body>
+
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stock Movement & Demand Forecast</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+    <h1>Stock Movement & Demand Forecast</h1>
+
+    <nav>
+        <a href="/">Inventory</a> |
+        <a href="/suppliers">Suppliers</a> |
+        <a href="/procurement">Procurement</a> |
+        <a href="/stock-forecast">Stock Forecast</a> |
+        <a href="/analytics">Analytics</a>
+    </nav>
+
+    <hr>
+
+    <h2>📊 Stock Movement Overview</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>📦 Total Stock Added</h3>
+            <p>{{ total_added }}</p>
+            <span>Units Added</span>
+        </div>
+
+        <div class="card">
+            <h3>📤 Total Stock Removed</h3>
+            <p>{{ total_removed }}</p>
+            <span>Units Used</span>
+        </div>
+
+        <div class="card">
+            <h3>📊 Current Stock</h3>
+            <p>{{ total_current_stock }}</p>
+            <span>Units Available</span>
+        </div>
+
+        <div class="card">
+            <h3>⚠️ Items Requiring Reorder</h3>
+            <p>{{ reorder_count }}</p>
+            <span>Items</span>
+        </div>
+
+    </div>
+
+    <hr>
+
+    <!-- DEMAND FORECAST -->
+
+    <h2>📈 Demand & Stock Requirement</h2>
+
+    <p>
+        This section analyzes previous stock movements to estimate
+        future stock requirements.
+    </p>
+
+    <table>
+
+        <tr>
+            <th>Item</th>
+            <th>Current Stock</th>
+            <th>Avg. Daily Usage</th>
+            <th>7-Day Requirement</th>
+            <th>Additional Stock Needed</th>
+            <th>Status</th>
+        </tr>
+
+        {% for item in forecast_data %}
+
+        <tr>
+
+            <td>
+                <strong>{{ item.item }}</strong>
+            </td>
+
+            <td>
+                {{ item.current_stock }}
+            </td>
+
+            <td>
+                {{ item.daily_usage }}
+            </td>
+
+            <td>
+                {{ item.required_7_days }}
+            </td>
+
+            <td>
+                {{ item.additional_required }}
+            </td>
+
+            <td>
+
+                {% if item.additional_required > 0 %}
+
+                    <strong style="color:#e74c3c;">
+                        ⚠️ Reorder Required
+                    </strong>
+
+                {% else %}
+
+                    <strong style="color:#27ae60;">
+                        ✅ Sufficient
+                    </strong>
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <!-- STOCK MOVEMENT HISTORY -->
+
+    <h2>📋 Stock Movement History</h2>
+
+    <p>
+        The table below shows when stock was added or removed from
+        the warehouse.
+    </p>
+
+    <table>
+
+        <tr>
+            <th>Date</th>
+            <th>Item</th>
+            <th>Stock Added</th>
+            <th>Stock Removed</th>
+            <th>Movement</th>
+        </tr>
+
+        {% for record in stock_history %}
+
+        <tr>
+
+            <td>
+                {{ record.date }}
+            </td>
+
+            <td>
+                {{ record.item }}
+            </td>
+
+            <td style="color:#27ae60; font-weight:bold;">
+                +{{ record.added }}
+            </td>
+
+            <td style="color:#e74c3c; font-weight:bold;">
+                -{{ record.removed }}
+            </td>
+
+            <td>
+
+                {% if record.added > 0 and record.removed == 0 %}
+
+                    📦 Stock Added
+
+                {% elif record.removed > 0 and record.added == 0 %}
+
+                    📤 Stock Removed
+
+                {% else %}
+
+                    🔄 Stock Movement
+
+                {% endif %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+    <hr>
+
+    <!-- OVERALL FORECAST -->
+
+    <h2>🔮 Overall Forecast</h2>
+
+    <div class="dashboard">
+
+        <div class="card">
+            <h3>Average Daily Usage</h3>
+            <p>{{ average_daily_usage }}</p>
+            <span>Units / Day</span>
+        </div>
+
+        <div class="card">
+            <h3>7-Day Requirement</h3>
+            <p>{{ forecast_7_days }}</p>
+            <span>Expected Units</span>
+        </div>
+
+    </div>
+
+</body>
+</html>
