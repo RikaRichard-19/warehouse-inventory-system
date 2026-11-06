@@ -1,3 +1,5 @@
+import os
+import json
 from flask import Flask, render_template, request, jsonify
 from datetime import datetime
 import gspread
@@ -10,11 +12,21 @@ SCOPES = [
     "https://www.googleapis.com/auth/spreadsheets"
 ]
 
-# Your Google service account JSON file
-credentials = Credentials.from_service_account_file(
-    "credentials.json",
-    scopes=SCOPES
-)
+google_credentials = os.environ.get("GOOGLE_CREDENTIALS")
+
+if google_credentials:
+    credentials_info = json.loads(google_credentials)
+    credentials = Credentials.from_service_account_info(
+        credentials_info,
+        scopes=SCOPES
+    )
+else:
+    credentials = Credentials.from_service_account_file(
+        "credentials.json",
+        scopes=SCOPES
+    )
+
+client = gspread.authorize(credentials)
 
 client = gspread.authorize(credentials)
 
